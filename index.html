@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .status-excellent {
+            border-top: 4px solid #28a745;
+        }
+        .status-good {
+            border-top: 4px solid #007bff;
+        }
+        .status-warning {
+            border-top: 4px solid #ffc107;
+        }
+        .status-danger {
+            border-top: 4px solid #dc3545;
+        }
+        .alert-green {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .alert-red {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .badge-outline {
+            background-color: transparent;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+        }
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .chart-container {
+            height: 300px;
+            width: 100%;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .color-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="mb-2">Smart Attendance Tracker</h1>
+            <p class="text-muted">Track your attendance across multiple subjects and stay on top of your academic requirements</p>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="calculator-tab" data-bs-toggle="tab" data-bs-target="#calculator" type="button" role="tab" aria-controls="calculator" aria-selected="true">Calculator</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="subjects-tab" data-bs-toggle="tab" data-bs-target="#subjects" type="button" role="tab" aria-controls="subjects" aria-selected="false">My Subjects</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab" aria-controls="analysis" aria-selected="false">Analysis</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Calculator Tab -->
+            <div class="tab-pane fade show active" id="calculator" role="tabpanel" aria-labelledby="calculator-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Add New Subject</h5>
+                        <p class="card-subtitle text-muted">Enter your attendance details to calculate how many classes you can skip or need to attend</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="subjectForm">
+                            <div class="mb-3">
+                                <label for="subjectName" class="form-label">Subject Name</label>
+                                <input type="text" class="form-control" id="subjectName" placeholder="e.g. Mathematics, Physics" required>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="requiredPercentage" class="form-label">Required Percentage</label>
+                                    <select class="form-select" id="requiredPercentage">
+                                        <option value="65">65%</option>
+                                        <option value="70">70%</option>
+                                        <option value="75" selected>75%</option>
+                                        <option value="80">80%</option>
+                                        <option value="85">85%</option>
+                                        <option value="90">90%</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="classesAttended" class="form-label">Classes Attended</label>
+                                    <input type="number" class="form-control" id="classesAttended" placeholder="Number of classes attended" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="totalClasses" class="form-label">Total Classes</label>
+                                    <input type="number" class="form-control" id="totalClasses" placeholder="Total number of classes" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle me-2" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                                Add Subject
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subjects Tab -->
+            <div class="tab-pane fade" id="subjects" role="tabpanel" aria-labelledby="subjects-tab">
+                <div id="subjectsList" class="row">
+                    <!-- Subjects will be added here dynamically -->
+                </div>
+                <div id="noSubjects" class="card">
+                    <div class="card-body text-center py-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#dee2e6" class="bi bi-bar-chart-fill mb-3" viewBox="0 0 16 16">
+                            <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
+                        </svg>
+                        <p class="text-muted">No subjects added yet. Add a subject from the Calculator tab.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Attendance Analysis</h5>
+                        <p class="card-subtitle" id="overallAttendance">Overall attendance: <strong>0%</strong></p>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartContainer" class="chart-container">
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <div>
+                            <span class="color-indicator bg-success"></span>
+                            <span class="text-sm" id="abovePercentage">Above 75%</span>
+                        </div>
+                        <div>
+                            <span class="color-indicator bg-danger"></span>
+                            <span class="text-sm" id="belowPercentage">Below 75%</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="noAnalysisData" class="card">
+                    <div class="card-body text-center py-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#dee2e6" class="bi bi-bar-chart-fill mb-3" viewBox="0 0 16 16">
+                            <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
+                        </svg>
+                        <p class="text-muted">No data to analyze. Add subjects to see your attendance analysis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Created by gurrapurajkumar99</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Subject class
+        class Subject {
+            constructor(id, name, present, total, percentage, canBunk, shouldAttend) {
+                this.id = id;
+                this.name = name;
+                this.present = present;
+                this.total = total;
+                this.percentage = percentage;
+                this.canBunk = canBunk;
+                this.shouldAttend = shouldAttend;
+            }
+        }
+
+        // App state
+        let subjects = [];
+        let chart = null;
+        const requiredPercentageSelect = document.getElementById('requiredPercentage');
+
+        // Load subjects from localStorage
+        function loadSubjects() {
+            const savedSubjects = localStorage.getItem('attendanceSubjects');
+            if (savedSubjects) {
+                try {
+                    subjects = JSON.parse(savedSubjects);
+                    updateUI();
+                } catch (e) {
+                    console.error('Failed to parse saved subjects', e);
+                    localStorage.removeItem('attendanceSubjects');
+                }
+            }
+        }
+
+        // Save subjects to localStorage
+        function saveSubjects() {
+            if (subjects.length > 0) {
+                localStorage.setItem('attendanceSubjects', JSON.stringify(subjects));
+            }
+        }
+
+        // Calculate attendance
+        function calculateAttendance(present, total, requiredPercentage) {
+            const requiredPercentageDecimal = requiredPercentage / 100;
+            const currentPercentage = (present / total) * 100;
+
+            // Calculate how many more classes can be bunked
+            const maxClassesCanMiss = total - (total * requiredPercentageDecimal);
+            const alreadyMissed = total - present;
+            const canBunk = Math.floor(maxClassesCanMiss - alreadyMissed);
+
+            // Calculate how many more classes need to attend
+            const minClassesRequired = Math.ceil(total * requiredPercentageDecimal);
+            const shouldAttend = Math.max(0, minClassesRequired - present);
+
+            return {
+                percentage: parseFloat(currentPercentage.toFixed(2)),
+                canBunk: canBunk >= 0 ? canBunk : 0,
+                shouldAttend
+            };
+        }
+
+        // Add new subject
+        function addSubject(name, present, total, requiredPercentage) {
+            const subjectExists = subjects.some(s => s.name.toLowerCase() === name.toLowerCase());
+            if (subjectExists) {
+                alert(`Subject "${name}" already exists!`);
+                return false;
+            }
+
+            const { percentage, canBunk, shouldAttend } = calculateAttendance(present, total, requiredPercentage);
+            
+            const newSubject = new Subject(
+                Date.now().toString(),
+                name,
+                present,
+                total,
+                percentage,
+                canBunk,
+                shouldAttend
+            );
+
+            subjects.push(newSubject);
+            saveSubjects();
+            updateUI();
+            return true;
+        }
+
+        // Delete subject
+        function deleteSubject(id) {
+            subjects = subjects.filter(subject => subject.id !== id);
+            if (subjects.length === 0) {
+                localStorage.removeItem('attendanceSubjects');
+            } else {
+                saveSubjects();
+            }
+            updateUI();
+        }
+
+        // Get attendance status
+        function getAttendanceStatus(percentage, requiredPercentage) {
+            if (percentage >= requiredPercentage + 10) return 'excellent';
+            if (percentage >= requiredPercentage) return 'good';
+            if (percentage >= requiredPercentage - 10) return 'warning';
+            return 'danger';
+        }
+
+        // Update UI
+        function updateUI() {
+            updateSubjectsList();
+            updateAnalysis();
+            toggleNoDataMessages();
+        }
+
+        // Update subjects list
+        function updateSubjectsList() {
+            const subjectsList = document.getElementById('subjectsList');
+            subjectsList.innerHTML = '';
+            
+            const requiredPercentage = parseInt(requiredPercentageSelect.value);
+
+            subjects.forEach(subject => {
+                const status = getAttendanceStatus(subject.percentage, requiredPercentage);
+                
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'col-md-6 mb-4';
+                subjectCard.innerHTML = `
+                    <div class="card status-${status}">
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="card-title">${subject.name}</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge ${status === 'danger' ? 'badge-danger' : 'badge-outline'}">${subject.percentage}%</span>
+                                    <span class="text-muted small">${subject.present}/${subject.total} classes</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm text-danger" onclick="deleteSubject('${subject.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            ${subject.canBunk > 0 ? 
+                                `<div class="alert alert-green">
+                                    You can skip <strong>${subject.canBunk}</strong> more classes while maintaining ${requiredPercentage}% attendance.
+                                </div>` : 
+                                `<div class="alert alert-red">
+                                    You need to attend <strong>${subject.shouldAttend}</strong> more classes to reach ${requiredPercentage}% attendance.
+                                </div>`
+                            }
+                        </div>
+                    </div>
+                `;
+                subjectsList.appendChild(subjectCard);
+            });
+        }
+
+        // Update analysis
+        function updateAnalysis() {
+            if (subjects.length === 0) return;
+
+            const requiredPercentage = parseInt(requiredPercentageSelect.value);
+            
+            // Calculate overall attendance
+            const totalPresent = subjects.reduce((sum, subject) => sum + subject.present, 0);
+            const totalClasses = subjects.reduce((sum, subject) => sum + subject.total, 0);
+            const overallAttendance = totalClasses > 0 ? (totalPresent / totalClasses) * 100 : 0;
+            
+            // Update overall attendance text
+            const overallAttendanceElement = document.getElementById('overallAttendance');
+            overallAttendanceElement.innerHTML = `
+                Overall attendance: <strong>${overallAttendance.toFixed(2)}%</strong>
+                ${overallAttendance >= requiredPercentage ? 
+                    '<span class="text-success"> (On track)</span>' : 
+                    '<span class="text-danger"> (Below requirement)</span>'}
+            `;
+
+            // Update percentage indicators
+            document.getElementById('abovePercentage').textContent = `Above ${requiredPercentage}%`;
+            document.getElementById('belowPercentage').textContent = `Below ${requiredPercentage}%`;
+
+            // Update chart
+            updateChart(requiredPercentage);
+        }
+
+        // Update chart
+        function updateChart(requiredPercentage) {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (chart) {
+                chart.destroy();
+            }
+            
+            // Prepare data for chart
+            const labels = subjects.map(subject => subject.name);
+            const data = subjects.map(subject => subject.percentage);
+            const backgroundColor = subjects.map(subject => 
+                subject.percentage >= requiredPercentage ? 'rgba(40, 167, 69, 0.7)' : 'rgba(220, 53, 69, 0.7)'
+            );
+            
+            // Create new chart
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Attendance %',
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        borderColor: backgroundColor.map(color => color.replace('0.7', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Attendance %'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Subjects'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Toggle no data messages
+        function toggleNoDataMessages() {
+            const hasSubjects = subjects.length > 0;
+            document.getElementById('noSubjects').style.display = hasSubjects ? 'none' : 'block';
+            document.getElementById('subjectsList').style.display = hasSubjects ? 'block' : 'none';
+            document.getElementById('noAnalysisData').style.display = hasSubjects ? 'none' : 'block';
+            document.querySelector('.card-header + .card-body + .card-footer').parentElement.style.display = hasSubjects ? 'block' : 'none';
+        }
+
+        // Form submission
+        document.getElementById('subjectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('subjectName').value.trim();
+            const present = parseInt(document.getElementById('classesAttended').value);
+            const total = parseInt(document.getElementById('totalClasses').value);
+            const requiredPercentage = parseInt(requiredPercentageSelect.value);
+            
+            if (!name) {
+                alert('Please enter a subject name');
+                return;
+            }
+            
+            if (isNaN(present) || isNaN(total) || total <= 0 || present < 0 || present > total) {
+                alert('Please enter valid numbers');
+                return;
+            }
+            
+            const success = addSubject(name, present, total, requiredPercentage);
+            if (success) {
+                document.getElementById('subjectName').value = '';
+                document.getElementById('classesAttended').value = '';
+                document.getElementById('totalClasses').value = '';
+            }
+        });
+
+        // Required percentage change
+        requiredPercentageSelect.addEventListener('change', function() {
+            // Recalculate all subjects with new required percentage
+            const requiredPercentage = parseInt(this.value);
+            
+            subjects.forEach(subject => {
+                const { canBunk, shouldAttend } = calculateAttendance(subject.present, subject.total, requiredPercentage);
+                subject.canBunk = canBunk;
+                subject.shouldAttend = shouldAttend;
+            });
+            
+            saveSubjects();
+            updateUI();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSubjects();
+            toggleNoDataMessages();
+        });
+    </script>
+</body>
+</html>
